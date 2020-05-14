@@ -32,7 +32,7 @@ CONFIG_DUMMY_MIN           =memory_fs
 TARGET_STATIC_DEV          =-static-debug
 TARGET_STATIC_REL          =-static-release
 
-PRESET ?= POSIX_REL
+PRESET ?= ZEPHYR_ARM
 
 # -------------------------------------------------------
 # POSIX DEV
@@ -111,6 +111,15 @@ else ifeq ($(PRESET), FUZZ_TESTS)
     TARGET = $(TARGET_STATIC_REL)
     IOTC_BSP_PLATFORM = posix
     IOTC_BSP_TLS =
+
+# -------------------------------------------------------
+# zephyr-arm
+else ifeq ($(PRESET), ZEPHYR_ARM)
+    #TODO: move to memory_fs
+    CONFIG = dummy_fs-tls_socket
+    TARGET = $(TARGET_STATIC_REL)
+    IOTC_BSP_PLATFORM = zephyr-arm
+    IOTC_TARGET_PLATFORM = zephyr-arm
 
 # -------------------------------------------------------
 # DEFAULT
