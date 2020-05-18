@@ -1,4 +1,4 @@
-/* Copyright 2018-2020 Google LLC
+/* Copyright 2019-2020 Google LLC
  *
  * This is part of the Google Cloud IoT Device SDK for Embedded C.
  * It is licensed under the BSD 3-Clause license; you may not use this file
@@ -17,7 +17,7 @@
 #include <iotc_bsp_rng.h>
 
 /* No TLS option choosen */
-#if !defined(TLSLIB_MBEDTLS) && !defined(TLSLIB_WOLFSSL)
+#if !defined(IOTC_TLS_LIB_MBEDTLS) && !defined(IOTC_TLS_LIB_WOLFSSL)
 
 #include <stdlib.h>
 #include <time.h>
@@ -38,7 +38,8 @@ uint32_t iotc_bsp_rng_get() {
 void iotc_bsp_rng_shutdown() { /* nothing to do here */
 }
 
-#elif defined(TLSLIB_MBEDTLS) /* MBEDTLS version of RNG implementation */
+#elif defined(IOTC_TLS_LIB_MBEDTLS) /* MBEDTLS version of RNG implementation \
+                                     */
 
 #include <mbedtls/config.h>
 #include <mbedtls/ctr_drbg.h>
@@ -47,7 +48,7 @@ void iotc_bsp_rng_shutdown() { /* nothing to do here */
 #include <stdio.h>
 
 static mbedtls_entropy_context entropy;
-static mbedtls_ctr_drbg_context ctr_drbg;
+mbedtls_ctr_drbg_context ctr_drbg;
 
 void iotc_bsp_rng_init() {
   const char personalization[] = "iotc_bsp_mbedtls_more_entropy_pls";
@@ -80,7 +81,8 @@ void iotc_bsp_rng_shutdown() {
   mbedtls_entropy_free(&entropy);
 }
 
-#elif defined(TLSLIB_WOLFSSL) /* WOLFSSL version of RNG implementation */
+#elif defined(IOTC_TLS_LIB_WOLFSSL) /* WOLFSSL version of RNG implementation \
+                                     */
 
 #include <cyassl/ctaocrypt/memory.h>
 #include <cyassl/ctaocrypt/random.h>
