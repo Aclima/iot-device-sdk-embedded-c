@@ -115,7 +115,6 @@ else ifeq ($(PRESET), FUZZ_TESTS)
 # -------------------------------------------------------
 # zephyr-arm
 else ifeq ($(PRESET), ZEPHYR_ARM)
-    #TODO: move to memory_fs
     CONFIG = memory_fs-tls_bsp
     TARGET = $(TARGET_STATIC_REL)
     IOTC_BSP_PLATFORM = zephyr-arm
