@@ -1,4 +1,4 @@
-/* Copyright 2018-2020 Google LLC
+/* Copyright 2019-2020 Google LLC
  *
  * This is part of the Google Cloud IoT Device SDK for Embedded C.
  * It is licensed under the BSD 3-Clause license; you may not use this file
@@ -15,8 +15,33 @@
  */
 
 #include <iotc_bsp_mem.h>
-#include <stdlib.h>
+#include <kernel.h>
 
+//TODO: switch from the generic heap to mempools to avoid the possibility
+//of fragmentation and for performance.
+//Not sure yet what's an optimal size for the mempool
+//(the default POSIX Zephyr implementation used 512K!), so we'll use the
+//heap for now.
+#ifdef USE_MEMPOOL
+// https://docs.zephyrproject.org/1.10.0/kernel/memory/pools.html
+K_MEM_POOL_DEFINE(iotc_mem_pool, 128, 32768, 16, 4);
+
+void* iotc_bsp_mem_alloc(size_t byte_count) {
+  void* ret = (void*)k_mem_pool_malloc(&iotc_mem_pool, byte_count);
+  return ret;
+}
+
+void* iotc_bsp_mem_realloc(void* ptr, size_t byte_count) {
+  (void)ptr;
+  (void)byte_count;
+  /* not implemented */
+  return NULL;
+}
+
+void iotc_bsp_mem_free(void* ptr) { k_free(ptr); }
+
+#else
+#include <stdlib.h>
 void* iotc_bsp_mem_alloc(size_t byte_count) {
   return (void*)malloc(byte_count);
 }
@@ -26,3 +51,4 @@ void* iotc_bsp_mem_realloc(void* ptr, size_t byte_count) {
 }
 
 void iotc_bsp_mem_free(void* ptr) { free(ptr); }
+#endif
