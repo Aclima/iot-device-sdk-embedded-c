@@ -20,4 +20,5 @@ include make/mt-os/mt-os-common.mk
 #appropriate ARM flags here, and perhaps set up a toolchain like is done in
 #mt-arm-linux.mk
 
+IOTC_C_FLAGS += -Wno-ignored-qualifiers
 IOTC_ARFLAGS += -rs -c $(XI)
