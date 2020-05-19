@@ -49,9 +49,15 @@ static iotc_bsp_crypto_state_t _iotc_create_iotcore_jwt_b64h_b64p(
       iotc_bsp_time_getcurrenttime_seconds();
 
   char payload[IOTC_JWT_PAYLOAD_BUF_SIZE] = {0};
+
+  //FIXME: Zephyr's newlib doesn't support long long specifiers.
+  //When using snprintf, this is particularly nasty, as it can cause a fault.
+  //We'll use '%ld' until this is fixed in Zephyr, which does appear to be
+  //coming down the road:
+  //https://github.com/zephyrproject-rtos/sdk-ng/issues/62
   snprintf(payload, IOTC_JWT_PAYLOAD_BUF_SIZE,
-           "{\"iat\":%lld,\"exp\":%lld,\"aud\":\"%s\"}", current_time_in_sec,
-           current_time_in_sec + expiration_period_sec, project_id);
+           "{\"iat\":%ld,\"exp\":%ld,\"aud\":\"%s\"}", (long)current_time_in_sec,
+           (long)(current_time_in_sec + expiration_period_sec), project_id);
 
   // base64 encode, header
   *bytes_written = 0;
