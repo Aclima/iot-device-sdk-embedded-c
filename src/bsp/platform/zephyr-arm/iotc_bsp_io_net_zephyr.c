@@ -49,7 +49,7 @@ iotc_bsp_io_net_state_t iotc_bsp_io_net_socket_connect(
   int status;
 
   memset(&hints, 0, sizeof(hints));
-  hints.ai_family = AF_UNSPEC;
+  hints.ai_family = AF_INET;
   hints.ai_socktype = socket_type;
   hints.ai_flags = 0;
   hints.ai_protocol = 0;
